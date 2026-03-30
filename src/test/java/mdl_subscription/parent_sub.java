@@ -39,7 +39,6 @@ public class parent_sub extends BaseInt{
 		String bgclr = subs.getCssValue("background-color"); 
 		System.out.println(bgclr);
 		assertEquals(bgclr, getValue("sub", "blueclr"));
-		
 		assertEquals(goal.getCssValue("background-color"), getValue("sub", "blueclr"));	
 		if(bgclr.contains(getValue("sub", "blueclr"))) {
 			subs.click();
