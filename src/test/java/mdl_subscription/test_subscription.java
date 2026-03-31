@@ -1,22 +1,27 @@
 package mdl_subscription;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 public class test_subscription extends parent_sub {
 	
 	
 	@Test(priority = 1)
-	public void checkallplanclickable() throws InterruptedException, IOException {
+	public void TC_01() throws InterruptedException, IOException {
+		
 		driver.get("http://206.189.23.26:3003/webapp/subscription");
-		selectplan("Basic");		
+		String sublist = getValue("sub", "sublist");
+		List<String> aa = Arrays.asList(sublist.split(","));
+		System.out.println(aa);
+		for(int i = 0; i< aa.size();i++) {
+			System.out.println(aa.get(i).trim());
+			selectplanonebyone(aa.get(i).trim());
+		}		
 	}
+	
 	
 	
 	

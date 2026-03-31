@@ -27,7 +27,7 @@ public class BaseInt {
 			driver = new FirefoxDriver();
 		}
 		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 	}
 	
 	

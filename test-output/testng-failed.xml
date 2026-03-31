@@ -6,8 +6,8 @@
       <class name="mdl_subscription.test_subscription">
         <methods>
           <include name="end"/>
+          <include name="TC_01"/>
           <include name="start"/>
-          <include name="checkallplanclickable"/>
         </methods>
       </class> <!-- mdl_subscription.test_subscription -->
     </classes>
