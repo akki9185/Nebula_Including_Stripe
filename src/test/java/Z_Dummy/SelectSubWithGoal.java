@@ -4,57 +4,139 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import BaseClass.BaseInt;
 
 public class SelectSubWithGoal  extends BaseInt{
 	
+	public static WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	public static String bgclr ;
+	public static String newbgclr ;
+
 	public static void main(String[] args) throws IOException, InterruptedException  {
 		// TODO Auto-generated method stub
 		startup();
 		driver.get(getValue("sub", "url"));
-		  
-		WebElement free = driver.findElement(By.xpath("//h5[contains(text(),'Subscription - Free')]/ancestor::div[contains(@class,'MuiCard-root')]"));
-		String bgclr =  free.getCssValue("background-color");
-		free.click();		
-		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-		wait.until(driver -> !free.getCssValue("background-color").equals(bgclr));
-		assertEquals(isElementPresent("sub", "btn_blueEC_xpath").getCssValue("background-color"), getValue("sub", "blueclr"), "color is not same");
-		free.click();
-		wait.until(driver -> free.getCssValue("background-color").equals(bgclr));
-		assertEquals(isElementPresent("sub", "btn_blueEC_xpath").getCssValue("background-color"), bgclr, "color is not same");
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-
-		
-		
+		String sublist = getValue("sub", "sublist");
+		List<String> aa = Arrays.asList(sublist.split(","));
+		System.out.println(aa);
+		for(int i = 0; i< aa.size();i++) {
+			System.out.println(aa.get(i).trim());
+//			selectplanonebyone(aa.get(i).trim());
+			if(aa.get(i).trim().equalsIgnoreCase("Free")) {
+				selectFree();
+			}
+			else if(aa.get(i).trim().equalsIgnoreCase("Basic")) {
+				selectBasic();				
+			}
+			else if(aa.get(i).trim().equalsIgnoreCase("Professional")) {
+				System.out.println("Professional **********************************");				
+			}
+			else if(aa.get(i).trim().equalsIgnoreCase("Enterprise")) {
+				System.out.println("Enterprise **********************************");				
+			}
+		}		
 		
 		
 		Thread.sleep(2000);
-//		driver.close();
+		driver.close();	
+	}	
+	
+	
+	public static void validateGoal(String subname,String goalName, boolean shouldBeSelected) throws IOException {
 		
-		
-		
-		
+	    By goalLocator = By.xpath("//p[contains(text(), '"+goalName+"')]/parent::div");
+	    WebElement goal = driver.findElement(goalLocator);
+	    String actualColor = goal.getCssValue("background-color");
+	    String opacity  = goal.getCssValue("opacity");
+	    if(subname.equalsIgnoreCase("Free") && !goalName.equalsIgnoreCase("EC")) {
+	    	//assertTrue(goal.getCssValue("opacity"),
+	    	Assert.assertEquals(opacity, "0.45", "Expected opacity 0.45 for Free plan but found:");
+	    }
+	    String expectedColor = shouldBeSelected ? getValue("sub", "blueclr") : getValue("sub", "white");
+	    if (shouldBeSelected) {
+	        Assert.assertTrue(actualColor.contains(expectedColor),
+	            goalName + " should be selected but is NOT");
+	        System.out.println("True &&&&&&&&&&&" + actualColor + expectedColor + subname + goalName+ shouldBeSelected );
+
+	    } else {
+	        Assert.assertTrue(actualColor.contains(expectedColor),
+	            goalName + " should NOT be selected but is correct");
+	        System.out.println("False &&&&&&&&&&&" + actualColor + expectedColor + subname + goalName+ shouldBeSelected );
+
+	    }
+	    
 	}
+	
+	
+	//Select Free and Validation EC is Selected and Other is Disable
+	public static void selectFree() throws IOException {
+		try {
+		WebElement sfree = isElementPresent("sub", "sub_Free_xpath");
+		bgclr = sfree.getCssValue("background-color");
+		sfree.click();
+		Thread.sleep(2000);
+//		wait.until(driver -> !sfree.getCssValue("background-color").equals(bgclr));
+		newbgclr = sfree.getCssValue("background-color");
+		Assert.assertTrue(newbgclr.contains("36, 98, 255, 1"));
+		validateGoal("Free","EC",true);
+		validateGoal("Free","FC",false);
+		validateGoal("Free","GC",false);
+		validateGoal("Free","PM",false);
+		isElementPresent("sub", "btn_EC_xpath").click();
+		validateGoal("Free","EC",true);
+		isElementPresent("sub", "btn_GC_xpath").click();
+		validateGoal("Free","GC",false);
+		isElementPresent("sub", "btn_FC_xpath").click();
+		validateGoal("Free","FC",false);
+		isElementPresent("sub", "btn_PM_xpath").click();
+		validateGoal("Free","PM",false);
+		}
+		catch (Exception e) {
+			System.out.println(e);
+			System.out.println("Selection issue in Free subscription.");
+		}
+	}
+	
+	public static void selectBasic() throws IOException {
+		try {
+		WebElement sBasic= isElementPresent("sub", "sub_Basic_xpath");
+		bgclr = sBasic.getCssValue("background-color");
+		sBasic.click();
+		Thread.sleep(2000);
+//		wait.until(driver -> !sBasic.getCssValue("background-color").equals(bgclr));
+		newbgclr = sBasic.getCssValue("background-color");
+		Assert.assertTrue(newbgclr.contains("36, 98, 255, 1"));
+		validateGoal("Basic","EC",true);
+		validateGoal("Basic","FC",false);
+		validateGoal("Basic","GC",false);
+		validateGoal("Basic","PM",false);
+		isElementPresent("sub", "btn_EC_xpath").click();
+		validateGoal("Basic","EC",true);
+		isElementPresent("sub", "btn_GC_xpath").click();
+		validateGoal("Basic","GC",true);
+		isElementPresent("sub", "btn_FC_xpath").click();
+		validateGoal("Basic","FC",true);
+		isElementPresent("sub", "btn_PM_xpath").click();
+		validateGoal("Basic","PM",true);	
+	}
+	catch (Exception e) {
+		System.out.println(e);
+		System.out.println("Selection issue in Basic subscription.");
+	}
+}
+
+	
+	
+	
 	
 
 }
