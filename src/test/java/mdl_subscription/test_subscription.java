@@ -18,7 +18,6 @@ public class test_subscription extends parent_sub {
 		System.out.println(aa);
 		for(int i = 0; i< aa.size();i++) {
 			System.out.println(aa.get(i).trim());
-			selectplanonebyone(aa.get(i).trim());
 		}		
 	}
 	

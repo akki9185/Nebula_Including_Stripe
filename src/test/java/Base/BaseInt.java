@@ -1,4 +1,4 @@
-package BaseClass;
+package Base;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,10 +20,10 @@ public class BaseInt {
 	
 	
 	public static void startup() throws IOException {
-		if(getValue("commn", "browser").equalsIgnoreCase("chrome")) {
+		if(getValue("webcommon", "browser").equalsIgnoreCase("chrome")) {
 			driver = new ChromeDriver();
 		}
-		else if(getValue("commn", "browser").equalsIgnoreCase("fire")) {
+		else if(getValue("webcommon", "browser").equalsIgnoreCase("fire")) {
 			driver = new FirefoxDriver();
 		}
 		driver.manage().window().maximize();

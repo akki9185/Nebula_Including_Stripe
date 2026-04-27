@@ -11,9 +11,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
-import BaseClass.BaseInt;
+import Base.BaseInt;
 
 public class parent_sub extends BaseInt{
+	public static WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
 	
 	
 	@BeforeSuite
@@ -31,81 +33,68 @@ public class parent_sub extends BaseInt{
 	
 	
 	
+
 	
 	
 	
 	
-	public static void selectplanonebyone(String subname) throws InterruptedException, IOException {
-		try {
-			
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-			WebElement subs = driver.findElement(By.xpath("//h5[contains(text(),'Subscription - "+ subname +"')]/ancestor::div[contains(@class,'MuiCard-root')]"));
-			WebElement goalEC = isElementPresent("sub", "btn_blueEC_xpath");
-			WebElement goalGC = isElementPresent("sub", "btn_GC_xpath"); 
-			WebElement goalFC = isElementPresent("sub", "btn_FC_xpath");
-			WebElement goalPM = isElementPresent("sub", "btn_PM_xpath");
-			String bgclr = subs.getCssValue("background-color");
-			String newbgclr = "";
-			
-//			Thread.sleep(1000);
-			 
-			System.out.println(bgclr + "++++++++++++++++++");
-			subs.click();
-//			Thread.sleep(3000);
-			wait.until(driver -> !subs.getCssValue("background-color").equals(bgclr));
-			newbgclr = subs.getCssValue("background-color");
-			System.out.println(newbgclr + "----------------");	
- 			//assertEquals(newbgclr, getValue("sub", "blueclr"),">>>>>>>>>>####################");
- 			Assert.assertTrue(newbgclr.contains("36, 98, 255, 1"));
-			validateGoal(subname,"EC",true);
-			validateGoal(subname,"FC",false);
-			validateGoal(subname,"GC",false);
-			validateGoal(subname,"PM",false);
-			
-			if(subname.equalsIgnoreCase("Free"))
-			{
-				goalEC.click();
-				validateGoal(subname,"EC",true);
-				goalGC.click();
-				validateGoal(subname,"GC",false);
-				goalFC.click();
-				validateGoal(subname,"FC",false);
-				goalPM.click();
-				validateGoal(subname,"PM",false);
-			}
-			else if(subname.equalsIgnoreCase("Basic")){			
-//				goalEC.click();
-				validateGoal(subname,"EC",true);
-				goalGC.click();
-				Thread.sleep(1000);
-				validateGoal(subname,"GC",true);
-				goalFC.click();
-				Thread.sleep(1000);
-				validateGoal(subname,"FC",true);
-				goalPM.click();
-				Thread.sleep(1000);
-				validateGoal(subname,"PM",true);
-				
-			}
-			else {
-				validateGoal(subname,"EC",true);
-				Thread.sleep(1000);
-				validateGoal(subname,"FC",true);
-				validateGoal(subname,"GC",true);
-				validateGoal(subname,"PM",true);
-			}
-			}
+	
+	
+	
+	public static void free_SubSelect(String subname) throws InterruptedException, IOException {
+		try {			
+		isElementPresent("sub", "subcard_Free_xpath").click();
+		String subClss = isElementPresent("sub", "subcard_Free_xpath").getAttribute("class");
+		wait.until(driver -> subClss.contains("mui-17cl4xt"));
+		Assert.assertTrue(isElementPresent("sub", "subcard_Free_xpath").getAttribute("class").contains(getValue("sub", "subCardActiv")));		
+		isElementPresent("sub", "ECgoal_xpath").click();
+		validateGoal(subname,"EC",true);
+		isElementPresent("sub", "GCgoal_xpath").click();
+		validateGoal(subname,"GC",false);
+		isElementPresent("sub", "FCgoal_xpath").click();
+		validateGoal(subname,"FC",false);
+		isElementPresent("sub", "PMgoal_xpath").click();
+		validateGoal(subname,"PM",false);
+		String tileClass = isElementPresent("sub", "subcard_Free_xpath").getAttribute("class");
+		Assert.assertTrue(tileClass.contains("mui-17cl4xt"));
+		}
 		catch (Exception e) {
 			System.out.println(e);
-			System.out.println("Selection issue  >>>>>>>>>>>>>>>>>");
-			}		
 		}
+		
+	}
+	
+	public static void validateGoal1(String subname,String goalName, boolean shouldBeSelected) throws IOException {
+	
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+	
+	
+	
 	
 	
 	
 	
 	public static void validateGoal(String subname,String goalName, boolean shouldBeSelected) throws IOException {
-		
+		try {		
 	    By goalLocator = By.xpath("//p[contains(text(), '"+goalName+"')]/parent::div");
 	    WebElement goal = driver.findElement(goalLocator);
 	    String actualColor = goal.getCssValue("background-color");
@@ -126,11 +115,12 @@ public class parent_sub extends BaseInt{
 	        System.out.println("False &&&&&&&&&&&" + actualColor + expectedColor + subname + goalName+ shouldBeSelected );
 
 	    }
+		}
+		catch (Exception e) {
+			System.out.println(e);
+		}
 	    
 	}
 	
-	public static void selectFree() {
-		
-		
-	}
+	
 }
